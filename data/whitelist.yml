@@ -1,0 +1,12 @@
+inproceedings:
+  - booktitle
+  - author
+  - title
+  - year
+article:
+  - title
+  - author
+  - year
+  - journal
+  - volume
+  - number
