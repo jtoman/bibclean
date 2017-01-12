@@ -42,12 +42,14 @@ lit_comma = Suppress(',')
 equals = Suppress('=')
 
 no_comma = Regex(r"[^,]+")
-key = Word(alphas)
+key = Word(alphas + "_")
 non_brace = Regex(r"[^{}]+")
 brace_value = Forward().addParseAction(lambda s: "".join(s.asList()))
-brace_value <<= ((Literal("{") + OneOrMore(brace_value) + Literal("}")) | non_brace)
+brace_delim = (Literal("{") + ZeroOrMore(brace_value) + Literal("}"))
+brace_value <<= (brace_delim | non_brace)
+value = brace_delim.addParseAction(lambda s: "".join(s.asList())) | no_comma
 
-key_item = Group(key + equals + Group(brace_value).addParseAction(lambda s: s.asList()[0]))
+key_item = Group(key + equals + Group(value).addParseAction(lambda s: s.asList()[0]))
 
 key_item_list = Group(delimitedList(key_item, delim=',') + Optional(Suppress(",")))
 
